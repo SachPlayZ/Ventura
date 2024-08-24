@@ -14,6 +14,7 @@ import {
   toWei,
   BaseTransactionOptions,
 } from "thirdweb";
+import { defineChain } from "thirdweb";
 import { createWallet } from "thirdweb/wallets";
 import { ethers } from "ethers";
 import { client } from "../app/client";
@@ -64,8 +65,8 @@ export const StateContextProvider = ({ children }: { children: ReactNode }) => {
       setAccount(account);
       const contract = await getContract({
         client,
-        chain: sepolia,
-        address: "0x44378e1beefC422568ABa878c74168369e4840C6",
+        chain: defineChain(43113),
+        address: "0x614A1F64395FD1b925E347AC13812CC48b62f5B7",
       });
       setContract(contract);
       console.log("Contract initialized", contract);
