@@ -3,8 +3,17 @@ import React from "react";
 import { FlipWords } from "@/components/ui/flip-words";
 import { CardContainer } from "@/components/ui/3d-card";
 import Statsection from "@/components/component/Statsection";
+import Footer from "@/components/component/Footer"; // Import the Footer component
 
-const startups = [
+// Define the type for the startup data
+interface Startup {
+  name: string;
+  description: string;
+  highlight: string;
+}
+
+// Array of startups with their respective details
+const startups: Startup[] = [
   {
     name: "Tech Innovators",
     description: "Revolutionizing technology with cutting-edge solutions.",
@@ -27,9 +36,9 @@ const startups = [
   },
 ];
 
-const Home = () => {
+const Home: React.FC = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <AuroraBackground>
         <div className="container mx-auto flex flex-col justify-center items-center">
           <h1 className="text-6xl md:text-8xl font-bold text-center mb-4 dark:text-white">
@@ -48,7 +57,7 @@ const Home = () => {
       </AuroraBackground>
       <Statsection />
 
-      <div className="flex flex-col">
+      <div className="flex flex-col flex-grow">
         <h1 className="text-6xl font-bold text-center mt-8 text-white">
           Recommended Startups
         </h1>
@@ -70,6 +79,9 @@ const Home = () => {
           ))}
         </div>
       </div>
+
+      {/* Footer Component */}
+      <Footer />
     </div>
   );
 };
