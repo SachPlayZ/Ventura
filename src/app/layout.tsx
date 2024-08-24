@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThirdwebProvider } from "thirdweb/react";
 import { Navbar } from "@/components/component/Navbar";
 import { cn } from "@/lib/utils";
 import { StateContextProvider } from "@/context";
+import Head from "next/head";
 
 const fontHeading = Inter({
   subsets: ["latin"],
@@ -31,6 +32,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+        {/* You can also add other meta tags here */}
+      </Head>
       <body
         className={cn("antialiased", fontHeading.variable, fontBody.variable)}
       >
