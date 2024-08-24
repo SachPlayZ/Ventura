@@ -1,190 +1,390 @@
 "use client";
+import React, { useState, useEffect } from "react";
+import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
+import { IconBrandTabler, IconUserBolt } from "@tabler/icons-react";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardTitle,
+} from "@/components/ui/card";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
-import Link, { LinkProps } from "next/link";
-import React, { useState, createContext, useContext } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import { useStateContext } from "@/context";
+import { Button } from "@/components/ui/button";
+import { ClipLoader } from "react-spinners"; // Import the spinner
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 
-interface Links {
-  label: string;
-  href: string;
-  icon: React.JSX.Element | React.ReactNode;
+interface Campaign {
+  owner: string;
+  title: string;
+  description: string;
+  target: string;
+  deadline: Date;
+  amountCollected: string;
+  image: string;
+  video: string;
+  donations: { funderAddress: string; amount: string }[];
+  pId: number;
 }
 
-interface SidebarContextProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  animate: boolean;
-}
+export default function SidebarDemo() {
+  const { address, getCampaigns } = useStateContext(); // Extract getCampaigns from the context
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [open, setOpen] = useState(false);
+  const [filterMyCampaigns, setFilterMyCampaigns] = useState(false); // New state for filtering campaigns
+  const [loading, setLoading] = useState(true); // State for managing loading
 
-const SidebarContext = createContext<SidebarContextProps | undefined>(
-  undefined
-);
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      setLoading(true); // Start loading
+      const fetchedCampaigns: Campaign[] = await getCampaigns();
+      if (filterMyCampaigns) {
+        setCampaigns(
+          fetchedCampaigns.filter((campaign) => campaign.owner === address)
+        );
+      } else {
+        setCampaigns(fetchedCampaigns);
+      }
+      setLoading(false); // Stop loading
+    };
 
-export const useSidebar = () => {
-  const context = useContext(SidebarContext);
-  if (!context) {
-    throw new Error("useSidebar must be used within a SidebarProvider");
-  }
-  return context;
-};
-
-export const SidebarProvider = ({
-  children,
-  open: openProp,
-  setOpen: setOpenProp,
-  animate = true,
-}: {
-  children: React.ReactNode;
-  open?: boolean;
-  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  animate?: boolean;
-}) => {
-  const [openState, setOpenState] = useState(false);
-
-  const open = openProp !== undefined ? openProp : openState;
-  const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState;
+    fetchCampaigns();
+  }, [getCampaigns, filterMyCampaigns, address]); // Depend on filterMyCampaigns and address
 
   return (
-    <SidebarContext.Provider value={{ open, setOpen, animate: animate }}>
-      {children}
-    </SidebarContext.Provider>
-  );
-};
-
-export const Sidebar = ({
-  children,
-  open,
-  setOpen,
-  animate,
-}: {
-  children: React.ReactNode;
-  open?: boolean;
-  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  animate?: boolean;
-}) => {
-  return (
-    <SidebarProvider open={open} setOpen={setOpen} animate={animate}>
-      {children}
-    </SidebarProvider>
-  );
-};
-
-export const SidebarBody = (props: React.ComponentProps<typeof motion.div>) => {
-  return (
-    <>
-      <DesktopSidebar {...props} />
-      <MobileSidebar {...(props as React.ComponentProps<"div">)} />
-    </>
-  );
-};
-
-export const DesktopSidebar = ({
-  className,
-  children,
-  ...props
-}: React.ComponentProps<typeof motion.div>) => {
-  const { open, setOpen, animate } = useSidebar();
-  return (
-    <>
-      <motion.div
-        className={cn(
-          "h-full px-4 py-4 hidden  md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[300px] flex-shrink-0",
-          className
-        )}
-        animate={{
-          width: animate ? (open ? "300px" : "60px") : "300px",
-        }}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-        {...props}
-      >
-        {children}
-      </motion.div>
-    </>
-  );
-};
-
-export const MobileSidebar = ({
-  className,
-  children,
-  ...props
-}: React.ComponentProps<"div">) => {
-  const { open, setOpen } = useSidebar();
-  return (
-    <>
-      <div
-        className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full"
-        )}
-        {...props}
-      >
-        <div className="flex justify-end z-20 w-full">
-          <IconMenu2
-            className="text-neutral-800 dark:text-neutral-200"
-            onClick={() => setOpen(!open)}
-          />
-        </div>
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{ x: "-100%", opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: "-100%", opacity: 0 }}
-              transition={{
-                duration: 0.3,
-                ease: "easeInOut",
-              }}
-              className={cn(
-                "fixed h-full w-full inset-0 bg-white dark:bg-neutral-900 p-10 z-[100] flex flex-col justify-between",
-                className
-              )}
-            >
-              <div
-                className="absolute right-10 top-10 z-50 text-neutral-800 dark:text-neutral-200"
-                onClick={() => setOpen(!open)}
-              >
-                <IconX />
-              </div>
-              {children}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </>
-  );
-};
-
-export const SidebarLink = ({
-  link,
-  className,
-  ...props
-}: {
-  link: Links;
-  className?: string;
-  props?: LinkProps;
-}) => {
-  const { open, animate } = useSidebar();
-  return (
-    <Link
-      href={link.href}
+    <div
       className={cn(
-        "flex items-center justify-start gap-2  group/sidebar py-2",
-        className
+        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
+        "h-[90vh]"
       )}
-      {...props}
     >
-      {link.icon}
+      <Sidebar open={open} setOpen={setOpen}>
+        <SidebarBody className="justify-between gap-10">
+          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+            <div className="mt-8 flex flex-col gap-4">
+              <button
+                onClick={() => setFilterMyCampaigns(false)}
+                className={cn(
+                  "flex items-center gap-2 transition-all duration-200",
+                  open ? "justify-start" : "justify-center",
+                  filterMyCampaigns === false
+                    ? "text-[#00d8ff] scale-105"
+                    : "text-neutral-700 dark:text-neutral-200",
+                  open ? "ms-4" : ""
+                )}
+              >
+                <IconBrandTabler className=" h-5 w-5 flex-shrink-0" />
+                <motion.span
+                  animate={{
+                    display: open ? "inline-block" : "none",
+                    opacity: open ? 1 : 0,
+                  }}
+                  className=" text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+                >
+                  All Startups
+                </motion.span>
+              </button>
+              <button
+                onClick={() => setFilterMyCampaigns(true)}
+                className={cn(
+                  "flex items-center gap-2 transition-all duration-200",
+                  open ? "justify-start" : "justify-center",
+                  filterMyCampaigns === true
+                    ? "text-[#00d8ff] scale-105"
+                    : "text-neutral-700 dark:text-neutral-200",
+                  open ? "ms-4" : ""
+                )}
+              >
+                <IconUserBolt className=" h-5 w-5 flex-shrink-0" />
+                <motion.span
+                  animate={{
+                    display: open ? "inline-block" : "none",
+                    opacity: open ? 1 : 0,
+                  }}
+                  className=" text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+                >
+                  My Startups
+                </motion.span>
+              </button>
+            </div>
+          </div>
+          <div>
+            <SidebarLink
+              link={{
+                label: address.substring(0, 25) + "...",
+                href: "#",
+                icon: (
+                  <Image
+                    src="/metamask.webp"
+                    className="h-7 w-7 flex-shrink-0 rounded-full"
+                    width={50}
+                    height={50}
+                    alt="Avatar"
+                  />
+                ),
+              }}
+            />
+          </div>
+        </SidebarBody>
+      </Sidebar>
+      <Dashboard
+        campaigns={campaigns}
+        filterMyCampaigns={filterMyCampaigns}
+        loading={loading}
+      />
+    </div>
+  );
+}
 
-      <motion.span
-        animate={{
-          display: animate ? (open ? "inline-block" : "none") : "inline-block",
-          opacity: animate ? (open ? 1 : 0) : 1,
-        }}
-        className="text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
-      >
-        {link.label}
-      </motion.span>
-    </Link>
+// Dashboard component to display the fetched campaigns
+const Dashboard = ({
+  campaigns,
+  filterMyCampaigns,
+  loading,
+}: {
+  campaigns: Campaign[];
+  filterMyCampaigns: boolean;
+  loading: boolean;
+}) => {
+  const { fundStartup, address, withdrawStartupFunds } = useStateContext();
+  const [viewDetails, setViewDetails] = useState(false);
+  const [fundAmount, setFundAmount] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  return (
+    <div className="flex flex-1">
+      <div className="p-2 md:pt-10 md:px-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-6 flex-1 w-full h-full">
+        <div className="flex justify-between">
+          <h2 className="dark:text-white text-5xl font-semibold">
+            {filterMyCampaigns ? "My Startups" : "All Startups"}
+          </h2>
+          <Link href="/startups/create-startup">
+            <Button className="bg-[#00d8ff] py-2 px-4 rounded-lg text-black">
+              Create Startup
+            </Button>
+          </Link>
+        </div>
+
+        <div
+          className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto noscroll"
+          style={{ maxHeight: "90vh" }}
+        >
+          {isLoading ? ( // Show spinner when loading
+            <div className="flex justify-center items-center w-full h-full">
+              <ClipLoader size={50} color="#00d8ff" />
+            </div>
+          ) : campaigns.length > 0 ? (
+            campaigns.map((campaign, idx) => {
+              // State to track if the details view is open
+
+              const videoId = campaign.video.split("=").pop();
+              const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+
+              // Calculate days remaining
+              const currentDate = new Date();
+              const deadlineDate = new Date(campaign.deadline);
+              const timeDifference =
+                deadlineDate.getTime() - currentDate.getTime();
+              const daysRemaining = Math.ceil(
+                timeDifference / (1000 * 3600 * 24)
+              );
+
+              return (
+                <Card key={idx}>
+                  <Image
+                    className="aspect-video object-cover rounded-t-lg"
+                    src={campaign.image}
+                    width={500}
+                    height={500}
+                    alt={`${idx}`}
+                  />
+                  {/* Progress bar*/}
+                  <div className="h-1 w-full bg-neutral-200 dark:bg-neutral-600">
+                    <div
+                      className="h-1 bg-green-600"
+                      style={{
+                        width: `${Math.min(
+                          (1.25 / parseFloat(campaign.target)) * 100,
+                          100
+                        )}%`,
+                      }}
+                    ></div>
+                  </div>
+                  <CardHeader>
+                    <CardTitle className="mb-1">{campaign.title}</CardTitle>
+                    <CardDescription>{campaign.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p>Target: {campaign.target} ETH</p>
+                    <p>Amount Collected: {campaign.amountCollected} ETH</p>
+                    <p>
+                      {viewDetails ? (
+                        daysRemaining > 0 ? (
+                          `Days Remaining: ${daysRemaining} days`
+                        ) : (
+                          <span className="text-red-500">Date Over</span>
+                        )
+                      ) : (
+                        `Deadline: ${deadlineDate.toLocaleDateString()}`
+                      )}
+                    </p>
+                  </CardContent>
+                  <CardFooter>
+                    <Dialog onOpenChange={(isOpen) => setViewDetails(isOpen)}>
+                      <DialogTrigger asChild>
+                        <Button className="w-32">View Details</Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <iframe
+                            src={embedUrl}
+                            className="aspect-video rounded-lg mb-5"
+                          />
+                          <DialogTitle className="text-center font-sans">
+                            <span className="text-2xl">{campaign.title}</span>
+                            <p className="text-lg font-medium">
+                              {campaign.description}
+                            </p>
+                          </DialogTitle>
+                        </DialogHeader>
+                        <DialogDescription className="space-y-4 text-left text-neutral-800 dark:text-neutral-300">
+                          <div className="flex flex-col space-y-2">
+                            {/* Amount Collected */}
+                            <div className="flex flex-col items-start">
+                              <p className="font-sans text-4xl font-bold">
+                                {campaign.amountCollected} ETH
+                              </p>
+                              <p className="font-sans text-sm text-neutral-500 mb-1">
+                                collected of {campaign.target} ETH goal
+                              </p>
+                            </div>
+
+                            {/* Progress Bar */}
+                            <div className="flex items-center">
+                              <div className="flex-1 h-5 bg-neutral-200 dark:bg-neutral-600 rounded-md overflow-hidden">
+                                <div
+                                  className="h-5 bg-green-500"
+                                  style={{
+                                    width: `${Math.min(
+                                      (1.25 / parseFloat(campaign.target)) *
+                                        100,
+                                      100
+                                    )}%`,
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
+
+                            {/* Days Remaining */}
+                            {daysRemaining > 0 ? (
+                              <div className="flex flex-col items-start">
+                                <p className="font-sans text-5xl font-bold mt-2">
+                                  {daysRemaining}
+                                </p>
+                                <p className="font-sans text-sm text-neutral-500">
+                                  days to go
+                                </p>
+                              </div>
+                            ) : (
+                              <p className="font-sans text-4xl font-bold text-red-500">
+                                Date Over
+                              </p>
+                            )}
+                          </div>
+                        </DialogDescription>
+
+                        <DialogFooter className="flex flex-col items-start space-y-4">
+                          {campaign.owner === address ? (
+                            <Button
+                              className="w-32"
+                              onClick={() => {
+                                withdrawStartupFunds(campaign.pId);
+                              }}
+                            >
+                              Withdraw Funds
+                            </Button>
+                          ) : (
+                            <Popover>
+                              <PopoverTrigger>
+                                <Button className="w-32">Lend</Button>
+                              </PopoverTrigger>
+                              <PopoverContent>
+                                <Label htmlFor="amount">
+                                  Amount to Lend (ETH)
+                                </Label>
+                                <Input
+                                  id="amount"
+                                  type="text"
+                                  placeholder="Enter amount"
+                                  className="mb-2"
+                                  // Bind the input to the state
+                                  onChange={(e) =>
+                                    setFundAmount(e.target.value)
+                                  }
+                                />
+                                <Button
+                                  onClick={async () => {
+                                    setIsLoading(true);
+                                    try {
+                                      await fundStartup(
+                                        campaign.pId,
+                                        fundAmount
+                                      );
+                                      alert("Loan funded successfully!");
+                                    } catch (error) {
+                                      console.error(
+                                        "Failed to lend loan",
+                                        error
+                                      );
+                                      alert("Failed to lend loan");
+                                    } finally {
+                                      setIsLoading(false);
+                                    }
+                                  }}
+                                >
+                                  {isLoading ? (
+                                    <ClipLoader size={20} color="#fff" />
+                                  ) : (
+                                    "Proceed"
+                                  )}
+                                </Button>
+                              </PopoverContent>
+                            </Popover>
+                          )}
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </CardFooter>
+                </Card>
+              );
+            })
+          ) : (
+            <p className="dark:text-white text-center">No campaigns found.</p>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
