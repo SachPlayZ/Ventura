@@ -328,11 +328,11 @@ const Dashboard = ({
                           ) : (
                             <Popover>
                               <PopoverTrigger>
-                                <Button className="w-32">Lend</Button>
+                                <Button className="w-32">Fund</Button>
                               </PopoverTrigger>
                               <PopoverContent>
                                 <Label htmlFor="amount">
-                                  Amount to Lend (ETH)
+                                  Amount to fund (ETH)
                                 </Label>
                                 <Input
                                   id="amount"
