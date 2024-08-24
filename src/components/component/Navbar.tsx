@@ -32,7 +32,7 @@ export function Navbar() {
   return (
     <header
       className={`bg-transparent text-white py-4 px-6 md:px-10 ${
-        pathname === "/" ? "fixed" : ""
+        pathname === "/" || "/about" ? "fixed" : ""
       } z-50 w-screen backdrop-blur-md`}
     >
       <div className="container mx-auto flex items-center justify-between">
