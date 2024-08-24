@@ -1,12 +1,27 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThirdwebProvider } from "thirdweb/react";
+import { Navbar } from "@/components/component/Navbar";
+import { cn } from "@/lib/utils";
+import { StateContextProvider } from "@/context";
 
-const inter = Inter({ subsets: ["latin"] });
+const fontHeading = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-heading",
+});
+
+const fontBody = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-body",
+});
 
 export const metadata: Metadata = {
   title: "Ventura",
-  description: "A Web 3 Kickstarter",
+  description:
+    "Invest into your favourite startups with cryptocurrency. Get started with Ventura today.",
 };
 
 export default function RootLayout({
@@ -15,8 +30,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className="dark">
+      <body
+        className={cn("antialiased", fontHeading.variable, fontBody.variable)}
+      >
+        <ThirdwebProvider>
+          <StateContextProvider>
+            <Navbar />
+            {children}
+          </StateContextProvider>
+        </ThirdwebProvider>
+      </body>
     </html>
   );
 }
