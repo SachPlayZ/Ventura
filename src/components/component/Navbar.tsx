@@ -90,7 +90,7 @@ export function Navbar() {
 
         {/* Logo */}
         <Link href="#" className="flex items-center gap-2" prefetch={false}>
-          <span className="text-xl font-bold">Venturâ</span>
+          <span className="text-xl font-bold">Ventur<span className="text-[#00d8ff]">â</span></span>
         </Link>
 
         {/* Desktop Menu */}
