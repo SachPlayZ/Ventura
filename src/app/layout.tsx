@@ -33,8 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <Head>
-        <link rel="icon" href="/favicon.ico" />
-        {/* You can also add other meta tags here */}
+        <link rel="icon" href="/favicon3.ico" />
       </Head>
       <body
         className={cn("antialiased", fontHeading.variable, fontBody.variable)}
