@@ -25,7 +25,7 @@ const About: React.FC = () => {
         <div className="relative bg-opacity-80 p-10 rounded-lg  max-w-3xl text-center">
           <h1 className="text-4xl font-bold mb-4">About Ventur<span className="text-[#00d8ff]">â</span></h1>
           <p className="text-lg mb-6">
-            Ventur<span className="text-[#00d8ff]">â</span> is an innovative platform aimed at empowering startups and
+            Venturâ is an innovative platform aimed at empowering startups and
             entrepreneurs.
           </p>
 
@@ -46,7 +46,7 @@ const About: React.FC = () => {
       {/* Second Section */}
       <div className="relative z-10 min-h-screen w-full flex items-center justify-center bg-gradient-to-b from-transparent to-black text-white">
         <div className="relative p-10 text-center">
-          <h2 className="text-3xl font-bold mb-4">More About Venturâ</h2>
+          <h2 className="text-3xl font-bold mb-4">More About Ventur<span className="text-[#00d8ff]">â</span></h2>
           <p className="text-lg max-w-xl mx-auto">
             Venturâ continues to evolve and innovate in the world of startups.
             We are dedicated to helping entrepreneurs realize their dreams by
