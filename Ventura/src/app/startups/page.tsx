@@ -237,8 +237,8 @@ const Dashboard = ({
                     <CardDescription>{campaign.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p>Target: {campaign.target} ETH</p>
-                    <p>Amount Collected: {campaign.amountCollected} ETH</p>
+                    <p>Target: {campaign.target} AVAX</p>
+                    <p>Amount Collected: {campaign.amountCollected} AVAX</p>
                     <p>
                       {viewDetails ? (
                         daysRemaining > 0 ? (
@@ -274,10 +274,10 @@ const Dashboard = ({
                             {/* Amount Collected */}
                             <div className="flex flex-col items-start">
                               <p className="font-sans text-4xl font-bold">
-                                {campaign.amountCollected} ETH
+                                {campaign.amountCollected} AVAX
                               </p>
                               <p className="font-sans text-sm text-neutral-500 mb-1">
-                                collected of {campaign.target} ETH goal
+                                collected of {campaign.target} AVAX goal
                               </p>
                             </div>
 
@@ -332,7 +332,7 @@ const Dashboard = ({
                               </PopoverTrigger>
                               <PopoverContent>
                                 <Label htmlFor="amount">
-                                  Amount to fund (ETH)
+                                  Amount to fund (AVAX)
                                 </Label>
                                 <Input
                                   id="amount"

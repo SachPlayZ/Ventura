@@ -145,7 +145,7 @@ export function Navbar() {
           className="bg-[#00d8ff] text-[#1a1a1a] font-medium px-4 py-2 rounded-md hover:bg-[#00b8e6] transition-colors flex gap-2"
         >
           <Image height={24} width={24} src="/metamask.webp" alt="logo" />
-          {balance ? `${balance.substring(0, 5)} ETH` : "Connect"}
+          {balance ? `${balance.substring(0, 5)} AVAX` : "Connect"}
         </Button>
       </div>
     </header>
