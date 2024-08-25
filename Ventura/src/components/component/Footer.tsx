@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="mb-8 md:mb-0">
             <h2 className="text-2xl font-bold text-primary mb-4">Ventur<span className="text-[#00d8ff]">â</span></h2>
-            <p className="mb-4">Creating amazing experiences for our customers since 2023.</p>
+            <p className="mb-4">Creating amazing experiences for our customers since 2024.</p>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4 text-[#00d8ff]">Quick Links</h3>
