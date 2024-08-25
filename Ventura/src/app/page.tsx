@@ -53,34 +53,37 @@ const Home: React.FC = () => {
           Recommended Startups
         </h1>
         <div className="flex flex-wrap gap-4 px-4 justify-center">
-          {campaigns.slice(0, 4).map((campaign, index) => (
-            <CardContainer key={index} className="inter-var">
-              <CardBody className="bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-zinc-800 dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border  ">
-                <CardItem
-                  translateZ="50"
-                  className="text-xl font-bold text-neutral-600 dark:text-white"
-                >
-                  {campaign.title}
-                </CardItem>
-                <CardItem
-                  as="p"
-                  translateZ="60"
-                  className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
-                >
-                  {campaign.description}
-                </CardItem>
-                <CardItem translateZ="100" className="w-full mt-4">
-                  <Image
-                    src={campaign.image}
-                    height="1000"
-                    width="1000"
-                    className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
-                    alt="thumbnail"
-                  />
-                </CardItem>
-              </CardBody>
-            </CardContainer>
-          ))}
+          {campaigns
+            .filter((_, index) => index !== 2) // Hide index 2
+            .slice(0, 4) // Show till index 5
+            .map((campaign, index) => (
+              <CardContainer key={index} className="inter-var">
+                <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-zinc-800 dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border">
+                  <CardItem
+                    translateZ="50"
+                    className="text-xl font-bold text-neutral-600 dark:text-white"
+                  >
+                    {campaign.title}
+                  </CardItem>
+                  <CardItem
+                    as="p"
+                    translateZ="60"
+                    className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
+                  >
+                    {campaign.description.substring(0, 50)}...
+                  </CardItem>
+                  <CardItem translateZ="100" className="w-full mt-4">
+                    <Image
+                      src={campaign.image}
+                      height="1000"
+                      width="1000"
+                      className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                      alt="thumbnail"
+                    />
+                  </CardItem>
+                </CardBody>
+              </CardContainer>
+            ))}
         </div>
       </div>
 
