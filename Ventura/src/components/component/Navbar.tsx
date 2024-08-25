@@ -32,7 +32,7 @@ export function Navbar() {
   return (
     <header
       className={`bg-transparent text-white py-4 px-6 md:px-10 ${
-        pathname === "/" || pathname==="/about" ? "fixed" : ""
+        pathname === "/" || pathname === "/about" ? "fixed" : ""
       } z-50 w-screen backdrop-blur-md`}
     >
       <div className="container mx-auto flex items-center justify-between">
@@ -90,7 +90,9 @@ export function Navbar() {
 
         {/* Logo */}
         <Link href="#" className="flex items-center gap-2" prefetch={false}>
-          <span className="text-xl font-bold">Ventur<span className="text-[#00d8ff]">â</span></span>
+          <span className="text-xl font-bold">
+            Ventur<span className="text-[#00d8ff]">â</span>
+          </span>
         </Link>
 
         {/* Desktop Menu */}
@@ -137,7 +139,6 @@ export function Navbar() {
         <Button
           onClick={() => {
             if (address) {
-              // Maybe show some dropdown with wallet details here
             } else {
               connect();
             }
