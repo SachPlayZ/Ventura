@@ -159,7 +159,7 @@ export default function Component() {
                 <TableCell>
                   <div className="font-medium">{loan.name}</div>
                 </TableCell>
-                <TableCell>{loan.amount.toLocaleString()} AVAx</TableCell>
+                <TableCell>{loan.amount.toLocaleString()} AVAX</TableCell>
                 <TableCell>{Number(loan.duration)} months</TableCell>
                 <TableCell>
                   {loan.amountCollected > 0
