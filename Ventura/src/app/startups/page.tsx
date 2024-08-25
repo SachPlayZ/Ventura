@@ -232,7 +232,9 @@ const Dashboard = ({
                     </div>
                     <CardHeader>
                       <CardTitle className="mb-1">{campaign.title}</CardTitle>
-                      <CardDescription>{campaign.description}</CardDescription>
+                      <CardDescription>
+                        {campaign.description.substring(0, 50)}...
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <p>Target: {campaign.target} AVAX</p>
