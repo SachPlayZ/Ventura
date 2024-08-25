@@ -224,7 +224,9 @@ const Dashboard = ({
                         className="h-1 bg-green-600"
                         style={{
                           width: `${Math.min(
-                            (1.25 / parseFloat(campaign.target)) * 100,
+                            (parseFloat(campaign.amountCollected) /
+                              parseFloat(campaign.target)) *
+                              100,
                             100
                           )}%`,
                         }}

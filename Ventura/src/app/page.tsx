@@ -49,7 +49,7 @@ const Home: React.FC = () => {
       <Statsection />
 
       <div className="flex flex-col flex-grow">
-        <h1 className="text-6xl font-bold text-center mt-8 text-white">
+        <h1 className="text-6xl font-bold text-center mt-8 mb-10 text-white">
           Recommended Startups
         </h1>
         <div className="flex flex-wrap gap-4 px-4 justify-center">
