@@ -40,7 +40,7 @@ const Home: React.FC = () => {
             </h2>
             <FlipWords
               className="text-2xl text-center"
-              words={["ETH", "Safe", "Secure"]}
+              words={["AVAX", "Safe", "Secure"]}
             />
           </div>
         </div>
