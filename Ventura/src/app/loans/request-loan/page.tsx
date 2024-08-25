@@ -81,7 +81,7 @@ const RequestLoan = () => {
                   <FormItem>
                     <FormLabel>Amount</FormLabel>
                     <FormControl>
-                      <Input placeholder="Loan amount in ETH" {...field} />
+                      <Input placeholder="Loan amount in AVAX" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

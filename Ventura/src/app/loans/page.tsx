@@ -159,12 +159,12 @@ export default function Component() {
                 <TableCell>
                   <div className="font-medium">{loan.name}</div>
                 </TableCell>
-                <TableCell>{loan.amount.toLocaleString()} ETH</TableCell>
+                <TableCell>{loan.amount.toLocaleString()} AVAx</TableCell>
                 <TableCell>{Number(loan.duration)} months</TableCell>
                 <TableCell>
                   {loan.amountCollected > 0
-                    ? loan.amountCollected.toLocaleString() + " ETH"
-                    : "0 ETH"}
+                    ? loan.amountCollected.toLocaleString() + " AVAX"
+                    : "0 AVAX"}
                 </TableCell>
                 <TableCell>
                   <Badge
@@ -205,7 +205,7 @@ export default function Component() {
                                 <div className="font-medium">
                                   {lender.address.substring(0, 6)}...
                                 </div>
-                                <div>{lender.amount.toLocaleString()} ETH</div>
+                                <div>{lender.amount.toLocaleString()} AVAX</div>
                               </div>
                             ))}
                           </div>
