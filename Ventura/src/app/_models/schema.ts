@@ -46,10 +46,10 @@ const KYCSchema: Schema = new mongoose.Schema({
         idType: { type: String, required: true, enum: ['PAN', 'Aadhar', 'Passport', 'Social Security Number'] },
         issuingAuthority: { type: String, required: true }
     },
-    proofOfIdentity: { type: String, required: true }, 
-    proofOfAddress: { type: String, required: true }, 
+    proofOfIdentity: { type: String, required: true },
+    proofOfAddress: { type: String, required: true },
     occupation: { type: String, required: true },
     companyName: { type: String }
 });
 
-export default mongoose.model<IKYC>("KYC", KYCSchema);
+export default mongoose.models.KYC || mongoose.model<IKYC>("KYC", KYCSchema);
