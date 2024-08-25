@@ -1,42 +1,32 @@
+"use client";
+import React, { useEffect, useState } from "react";
 import { AuroraBackground } from "@/components/ui/aurora-background";
-import React from "react";
 import { FlipWords } from "@/components/ui/flip-words";
-import { CardContainer } from "@/components/ui/3d-card";
+import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 import Statsection from "@/components/component/Statsection";
-import Footer from "@/components/component/Footer"; // Import the Footer component
+import Footer from "@/components/component/Footer";
+import { useStateContext } from "@/context";
+import Image from "next/image";
 
-// Define the type for the startup data
-interface Startup {
+// Define the type for the campaign data
+interface Campaign {
   name: string;
   description: string;
-  highlight: string;
+  image: string;
 }
 
-// Array of startups with their respective details
-const startups: Startup[] = [
-  {
-    name: "Tech Innovators",
-    description: "Revolutionizing technology with cutting-edge solutions.",
-    highlight: "AI & Machine Learning",
-  },
-  {
-    name: "Green Future",
-    description: "Sustainable energy solutions for a cleaner tomorrow.",
-    highlight: "Renewable Energy",
-  },
-  {
-    name: "Health Plus",
-    description: "Improving healthcare with innovative technology.",
-    highlight: "HealthTech",
-  },
-  {
-    name: "EduNext",
-    description: "Transforming education with digital platforms.",
-    highlight: "EdTech",
-  },
-];
-
 const Home: React.FC = () => {
+  const { getCampaigns } = useStateContext();
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      const campaignData = await getCampaigns();
+      setCampaigns(campaignData);
+    };
+    fetchCampaigns();
+  }, [getCampaigns]);
+
   return (
     <div className="flex flex-col min-h-screen">
       <AuroraBackground>
@@ -55,6 +45,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </AuroraBackground>
+
       <Statsection />
 
       <div className="flex flex-col flex-grow">
@@ -62,19 +53,27 @@ const Home: React.FC = () => {
           Recommended Startups
         </h1>
         <div className="flex flex-wrap gap-4 px-4 justify-center">
-          {startups.map((startup, index) => (
+          {campaigns.slice(0, 4).map((campaign, index) => (
             <CardContainer key={index}>
-              <div className="h-96 w-72 bg-card rounded-lg shadow-lg flex flex-col items-center justify-center p-4">
-                <h1 className="text-2xl font-bold text-white mb-2">
-                  {startup.name}
-                </h1>
-                <p className="text-white text-center mb-4">
-                  {startup.description}
-                </p>
-                <span className="text-[#00d8ff] font-medium">
-                  {startup.highlight}
-                </span>
-              </div>
+              <CardBody className="bg-card rounded-lg shadow-lg p-4">
+                <CardItem translateZ="100" className="w-full">
+                  <Image
+                    src={campaign.image}
+                    alt={campaign.name}
+                    width={500}
+                    height={200}
+                    className="object-cover rounded-lg aspect-video mb-4"
+                  />
+                </CardItem>
+                <CardItem className="text-center" translateZ={100}>
+                  <h1 className="text-2xl font-bold text-white mb-2">
+                    {campaign.name}
+                  </h1>
+                  <p className="text-white text-center mb-4">
+                    {campaign.description}
+                  </p>
+                </CardItem>
+              </CardBody>
             </CardContainer>
           ))}
         </div>
