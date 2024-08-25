@@ -10,7 +10,7 @@ import Image from "next/image";
 
 // Define the type for the campaign data
 interface Campaign {
-  name: string;
+  title: string;
   description: string;
   image: string;
 }
@@ -54,24 +54,29 @@ const Home: React.FC = () => {
         </h1>
         <div className="flex flex-wrap gap-4 px-4 justify-center">
           {campaigns.slice(0, 4).map((campaign, index) => (
-            <CardContainer key={index}>
-              <CardBody className="bg-card rounded-lg shadow-lg p-4">
-                <CardItem translateZ="100" className="w-full">
+            <CardContainer className="inter-var">
+              <CardBody className="bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-zinc-800 dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border  ">
+                <CardItem
+                  translateZ="50"
+                  className="text-xl font-bold text-neutral-600 dark:text-white"
+                >
+                  {campaign.title}
+                </CardItem>
+                <CardItem
+                  as="p"
+                  translateZ="60"
+                  className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
+                >
+                  {campaign.description}
+                </CardItem>
+                <CardItem translateZ="100" className="w-full mt-4">
                   <Image
                     src={campaign.image}
-                    alt={campaign.name}
-                    width={500}
-                    height={200}
-                    className="object-cover rounded-lg aspect-video mb-4"
+                    height="1000"
+                    width="1000"
+                    className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                    alt="thumbnail"
                   />
-                </CardItem>
-                <CardItem className="text-center" translateZ={100}>
-                  <h1 className="text-2xl font-bold text-white mb-2">
-                    {campaign.name}
-                  </h1>
-                  <p className="text-white text-center mb-4">
-                    {campaign.description}
-                  </p>
                 </CardItem>
               </CardBody>
             </CardContainer>

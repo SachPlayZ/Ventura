@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/select";
 
 const formSchema = z.object({
+  address: z.string().min(1, { message: "Required" }),
   fullName: z.string().min(1, { message: "Required" }),
   dateOfBirth: z.date().refine((date) => date.getTime() < Date.now(), {
     message: "Date of Birth must be in the past",
@@ -63,6 +64,7 @@ const KYCForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      address: "",
       fullName: "",
       dateOfBirth: new Date(),
       nationality: "",
@@ -93,10 +95,12 @@ const KYCForm = () => {
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      // Replace with your submission logic
-      console.log("Submitting KYC data", data);
-      // Redirect or show success message
-      router.push("/kyc-success");
+      const response = await fetch("/api/kyc", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      console.log("Submitted KYC data", response);
+      router.push("/");
     } catch (error) {
       console.error("Failed to submit KYC data", error);
       // Handle error accordingly
@@ -111,6 +115,20 @@ const KYCForm = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Wallet Address</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Wallet Address" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="fullName"
