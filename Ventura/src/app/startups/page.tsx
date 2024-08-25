@@ -196,190 +196,184 @@ const Dashboard = ({
               <ClipLoader size={50} color="#00d8ff" />
             </div>
           ) : campaigns.length > 0 ? (
-            campaigns.map((campaign, idx) => {
-              // State to track if the details view is open
+            campaigns
+              .filter((_, idx) => idx !== 2) // Exclude the card at index 2
+              .map((campaign, idx) => {
+                const videoId = campaign.video.split("=").pop();
+                const embedUrl = `https://www.youtube.com/embed/${videoId}`;
 
-              const videoId = campaign.video.split("=").pop();
-              const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                const currentDate = new Date();
+                const deadlineDate = new Date(campaign.deadline);
+                const timeDifference =
+                  deadlineDate.getTime() - currentDate.getTime();
+                const daysRemaining = Math.ceil(
+                  timeDifference / (1000 * 3600 * 24)
+                );
 
-              // Calculate days remaining
-              const currentDate = new Date();
-              const deadlineDate = new Date(campaign.deadline);
-              const timeDifference =
-                deadlineDate.getTime() - currentDate.getTime();
-              const daysRemaining = Math.ceil(
-                timeDifference / (1000 * 3600 * 24)
-              );
-
-              return (
-                <Card key={idx}>
-                  <Image
-                    className="aspect-video object-cover rounded-t-lg"
-                    src={campaign.image}
-                    width={500}
-                    height={500}
-                    alt={`${idx}`}
-                  />
-                  {/* Progress bar*/}
-                  <div className="h-1 w-full bg-neutral-200 dark:bg-neutral-600">
-                    <div
-                      className="h-1 bg-green-600"
-                      style={{
-                        width: `${Math.min(
-                          (1.25 / parseFloat(campaign.target)) * 100,
-                          100
-                        )}%`,
-                      }}
-                    ></div>
-                  </div>
-                  <CardHeader>
-                    <CardTitle className="mb-1">{campaign.title}</CardTitle>
-                    <CardDescription>{campaign.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p>Target: {campaign.target} AVAX</p>
-                    <p>Amount Collected: {campaign.amountCollected} AVAX</p>
-                    <p>
-                      {viewDetails ? (
-                        daysRemaining > 0 ? (
-                          `Days Remaining: ${daysRemaining} days`
-                        ) : (
-                          <span className="text-red-500">Date Over</span>
-                        )
-                      ) : (
-                        `Deadline: ${deadlineDate.toLocaleDateString()}`
-                      )}
-                    </p>
-                  </CardContent>
-                  <CardFooter>
-                    <Dialog onOpenChange={(isOpen) => setViewDetails(isOpen)}>
-                      <DialogTrigger asChild>
-                        <Button className="w-32">View Details</Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <iframe
-                            src={embedUrl}
-                            className="aspect-video rounded-lg mb-5"
-                          />
-                          <DialogTitle className="text-center font-sans">
-                            <span className="text-2xl">{campaign.title}</span>
-                            <p className="text-lg font-medium">
-                              {campaign.description}
-                            </p>
-                          </DialogTitle>
-                        </DialogHeader>
-                        <DialogDescription className="space-y-4 text-left text-neutral-800 dark:text-neutral-300">
-                          <div className="flex flex-col space-y-2">
-                            {/* Amount Collected */}
-                            <div className="flex flex-col items-start">
-                              <p className="font-sans text-4xl font-bold">
-                                {campaign.amountCollected} AVAX
-                              </p>
-                              <p className="font-sans text-sm text-neutral-500 mb-1">
-                                collected of {campaign.target} AVAX goal
-                              </p>
-                            </div>
-
-                            {/* Progress Bar */}
-                            <div className="flex items-center">
-                              <div className="flex-1 h-5 bg-neutral-200 dark:bg-neutral-600 rounded-md overflow-hidden">
-                                <div
-                                  className="h-5 bg-green-500"
-                                  style={{
-                                    width: `${Math.min(
-                                      (1.25 / parseFloat(campaign.target)) *
-                                        100,
-                                      100
-                                    )}%`,
-                                  }}
-                                ></div>
-                              </div>
-                            </div>
-
-                            {/* Days Remaining */}
-                            {daysRemaining > 0 ? (
-                              <div className="flex flex-col items-start">
-                                <p className="font-sans text-5xl font-bold mt-2">
-                                  {daysRemaining}
-                                </p>
-                                <p className="font-sans text-sm text-neutral-500">
-                                  days to go
-                                </p>
-                              </div>
-                            ) : (
-                              <p className="font-sans text-4xl font-bold text-red-500">
-                                Date Over
-                              </p>
-                            )}
-                          </div>
-                        </DialogDescription>
-
-                        <DialogFooter className="flex flex-col items-start space-y-4">
-                          {campaign.owner === address ? (
-                            <Button
-                              className="w-32"
-                              onClick={() => {
-                                withdrawStartupFunds(campaign.pId);
-                              }}
-                            >
-                              Withdraw Funds
-                            </Button>
+                return (
+                  <Card key={idx}>
+                    <Image
+                      className="aspect-video object-cover rounded-t-lg"
+                      src={campaign.image}
+                      width={500}
+                      height={500}
+                      alt={`${idx}`}
+                    />
+                    <div className="h-1 w-full bg-neutral-200 dark:bg-neutral-600">
+                      <div
+                        className="h-1 bg-green-600"
+                        style={{
+                          width: `${Math.min(
+                            (1.25 / parseFloat(campaign.target)) * 100,
+                            100
+                          )}%`,
+                        }}
+                      ></div>
+                    </div>
+                    <CardHeader>
+                      <CardTitle className="mb-1">{campaign.title}</CardTitle>
+                      <CardDescription>{campaign.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p>Target: {campaign.target} AVAX</p>
+                      <p>Amount Collected: {campaign.amountCollected} AVAX</p>
+                      <p>
+                        {viewDetails ? (
+                          daysRemaining > 0 ? (
+                            `Days Remaining: ${daysRemaining} days`
                           ) : (
-                            <Popover>
-                              <PopoverTrigger>
-                                <Button className="w-32">Fund</Button>
-                              </PopoverTrigger>
-                              <PopoverContent>
-                                <Label htmlFor="amount">
-                                  Amount to fund (AVAX)
-                                </Label>
-                                <Input
-                                  id="amount"
-                                  type="text"
-                                  placeholder="Enter amount"
-                                  className="mb-2"
-                                  // Bind the input to the state
-                                  onChange={(e) =>
-                                    setFundAmount(e.target.value)
-                                  }
-                                />
-                                <Button
-                                  onClick={async () => {
-                                    setIsLoading(true);
-                                    try {
-                                      await fundStartup(
-                                        campaign.pId,
-                                        fundAmount
-                                      );
-                                      alert("Loan funded successfully!");
-                                    } catch (error) {
-                                      console.error(
-                                        "Failed to lend loan",
-                                        error
-                                      );
-                                      alert("Failed to lend loan");
-                                    } finally {
-                                      setIsLoading(false);
+                            <span className="text-red-500">Date Over</span>
+                          )
+                        ) : (
+                          `Deadline: ${deadlineDate.toLocaleDateString()}`
+                        )}
+                      </p>
+                    </CardContent>
+                    <CardFooter>
+                      <Dialog onOpenChange={(isOpen) => setViewDetails(isOpen)}>
+                        <DialogTrigger asChild>
+                          <Button className="w-32">View Details</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <iframe
+                              src={embedUrl}
+                              className="aspect-video rounded-lg mb-5"
+                            />
+                            <DialogTitle className="text-center font-sans">
+                              <span className="text-2xl">{campaign.title}</span>
+                              <p className="text-lg font-medium">
+                                {campaign.description}
+                              </p>
+                            </DialogTitle>
+                          </DialogHeader>
+                          <DialogDescription className="space-y-4 text-left text-neutral-800 dark:text-neutral-300">
+                            <div className="flex flex-col space-y-2">
+                              <div className="flex flex-col items-start">
+                                <p className="font-sans text-4xl font-bold">
+                                  {campaign.amountCollected} AVAX
+                                </p>
+                                <p className="font-sans text-sm text-neutral-500 mb-1">
+                                  collected of {campaign.target} AVAX goal
+                                </p>
+                              </div>
+
+                              <div className="flex items-center">
+                                <div className="flex-1 h-5 bg-neutral-200 dark:bg-neutral-600 rounded-md overflow-hidden">
+                                  <div
+                                    className="h-5 bg-green-500"
+                                    style={{
+                                      width: `${Math.min(
+                                        (1.25 / parseFloat(campaign.target)) *
+                                          100,
+                                        100
+                                      )}%`,
+                                    }}
+                                  ></div>
+                                </div>
+                              </div>
+
+                              {daysRemaining > 0 ? (
+                                <div className="flex flex-col items-start">
+                                  <p className="font-sans text-5xl font-bold mt-2">
+                                    {daysRemaining}
+                                  </p>
+                                  <p className="font-sans text-sm text-neutral-500">
+                                    days to go
+                                  </p>
+                                </div>
+                              ) : (
+                                <p className="font-sans text-4xl font-bold text-red-500">
+                                  Date Over
+                                </p>
+                              )}
+                            </div>
+                          </DialogDescription>
+
+                          <DialogFooter className="flex flex-col items-start space-y-4">
+                            {campaign.owner === address ? (
+                              <Button
+                                className="w-32"
+                                onClick={() => {
+                                  withdrawStartupFunds(campaign.pId);
+                                }}
+                              >
+                                Withdraw Funds
+                              </Button>
+                            ) : (
+                              <Popover>
+                                <PopoverTrigger>
+                                  <Button className="w-32">Fund</Button>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Label htmlFor="amount">
+                                    Amount to fund (AVAX)
+                                  </Label>
+                                  <Input
+                                    id="amount"
+                                    type="text"
+                                    placeholder="Enter amount"
+                                    className="mb-2"
+                                    onChange={(e) =>
+                                      setFundAmount(e.target.value)
                                     }
-                                  }}
-                                >
-                                  {isLoading ? (
-                                    <ClipLoader size={20} color="#fff" />
-                                  ) : (
-                                    "Proceed"
-                                  )}
-                                </Button>
-                              </PopoverContent>
-                            </Popover>
-                          )}
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                  </CardFooter>
-                </Card>
-              );
-            })
+                                  />
+                                  <Button
+                                    onClick={async () => {
+                                      setIsLoading(true);
+                                      try {
+                                        await fundStartup(
+                                          campaign.pId,
+                                          fundAmount
+                                        );
+                                        alert("Loan funded successfully!");
+                                      } catch (error) {
+                                        console.error(
+                                          "Failed to lend loan",
+                                          error
+                                        );
+                                        alert("Failed to lend loan");
+                                      } finally {
+                                        setIsLoading(false);
+                                      }
+                                    }}
+                                  >
+                                    {isLoading ? (
+                                      <ClipLoader size={20} color="#fff" />
+                                    ) : (
+                                      "Proceed"
+                                    )}
+                                  </Button>
+                                </PopoverContent>
+                              </Popover>
+                            )}
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </CardFooter>
+                  </Card>
+                );
+              })
           ) : (
             <p className="dark:text-white text-center">No campaigns found.</p>
           )}

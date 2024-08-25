@@ -89,7 +89,7 @@ export function Navbar() {
         </div>
 
         {/* Logo */}
-        <Link href="#" className="flex items-center gap-2" prefetch={false}>
+        <Link href="/" className="flex items-center gap-2" prefetch={false}>
           <span className="text-xl font-bold">
             Ventur<span className="text-[#00d8ff]">â</span>
           </span>
