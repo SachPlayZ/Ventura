@@ -24,12 +24,12 @@ async function gethandler(req: Request) {
     try {
         await connectToDatabase();
         const url = new URL(req.url);
-        const email = url.searchParams.get('email');
+        const address = url.searchParams.get('address');
 
-        if (!email) {
-            return NextResponse.json({ message: 'Email is required' }, { status: 400 });
+        if (!address) {
+            return NextResponse.json({ message: 'Wallet address is required' }, { status: 400 });
         }
-        const kycData = await KYC.findOne({ email }).exec();
+        const kycData = await KYC.findOne({ address }).exec();
 
         if (!kycData) {
             return NextResponse.json({ message: 'No KYC data found' }, { status: 404 });
@@ -47,10 +47,10 @@ async function patchhandler(req: Request) {
         await connectToDatabase();
 
         const url = new URL(req.url);
-        const email = url.searchParams.get('email');
+        const address = url.searchParams.get('address');
 
-        if (!email) {
-            return NextResponse.json({ message: 'Email is required' }, { status: 400 });
+        if (!address) {
+            return NextResponse.json({ message: 'Wallet address is required' }, { status: 400 });
         }
 
         const updates = await req.json();
@@ -60,10 +60,10 @@ async function patchhandler(req: Request) {
             return NextResponse.json({ message: 'No data provided for update' }, { status: 400 });
         }
 
-        const kycData = await KYC.findOneAndUpdate({ email }, updates, { new: true }).exec();
+        const kycData = await KYC.findOneAndUpdate({ address }, updates, { new: true }).exec();
 
         if (!kycData) {
-            return NextResponse.json({ message: 'No KYC data found for this email' }, { status: 404 });
+            return NextResponse.json({ message: 'No KYC data found for this wallet address' }, { status: 404 });
         }
 
         return NextResponse.json({ message: 'KYC data updated successfully', kycData }, { status: 200 });
@@ -78,16 +78,16 @@ async function deletehandler(req: Request) {
         await connectToDatabase();
 
         const url = new URL(req.url);
-        const email = url.searchParams.get('email');
+        const address = url.searchParams.get('address');
 
-        if (!email) {
-            return NextResponse.json({ message: 'Email is required' }, { status: 400 });
+        if (!address) {
+            return NextResponse.json({ message: 'Wallet address is required' }, { status: 400 });
         }
 
-        const kycData = await KYC.findOneAndDelete({ email }).exec();
+        const kycData = await KYC.findOneAndDelete({ address }).exec();
 
         if (!kycData) {
-            return NextResponse.json({ message: 'No KYC data found for this email' }, { status: 404 });
+            return NextResponse.json({ message: 'No KYC data found for this wallet address' }, { status: 404 });
         }
 
         return NextResponse.json({ message: 'KYC data deleted successfully' }, { status: 200 });
